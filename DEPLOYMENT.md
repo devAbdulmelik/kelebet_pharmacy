@@ -116,7 +116,6 @@ Backend:
 - `CSRF_TRUSTED_ORIGINS`
 - `DATABASE_URL`
 - `DJANGO_SUPERUSER_USERNAME`
-- `DJANGO_SUPERUSER_EMAIL`
 - `DJANGO_SUPERUSER_PASSWORD`
 
 Frontend:
@@ -129,8 +128,7 @@ For Render free instances, shell access is not available. This project supports 
 
 ```bash
 DJANGO_SUPERUSER_USERNAME=admin
-DJANGO_SUPERUSER_EMAIL=you@example.com
-DJANGO_SUPERUSER_PASSWORD=your-strong-password
+DJANGO_SUPERUSER_PASSWORD=admin123
 ```
 
 During deployment, `build.sh` runs:
@@ -139,7 +137,7 @@ During deployment, `build.sh` runs:
 python manage.py create_render_superuser
 ```
 
-If the admin already exists, it is skipped safely.
+If the admin already exists, the command updates its password and keeps it as a superadmin account.
 
 ## 8. What this repo already supports
 

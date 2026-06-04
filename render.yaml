@@ -24,11 +24,11 @@ services:
           name: kelebet-pharmacy-db
           property: connectionString
       - key: DJANGO_SUPERUSER_USERNAME
-        sync: false
+        value: admin
       - key: DJANGO_SUPERUSER_EMAIL
-        sync: false
+        value: ""
       - key: DJANGO_SUPERUSER_PASSWORD
-        sync: false
+        value: admin123
 
   - type: web
     name: kelebet-pharmacy-web
