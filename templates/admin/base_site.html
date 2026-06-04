@@ -1,0 +1,22 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{% static 'admin/custom_admin.css' %}">
+{% endblock %}
+
+{% block branding %}
+<div class="kp-branding">
+  <img src="{% static 'admin/logo.png' %}" alt="Kelebet Pharmacy" class="kp-branding__logo">
+  <div class="kp-branding__copy">
+    <h1 id="site-name">Kelebet Pharmacy Admin</h1>
+    <div class="kp-branding__subtitle">Operations and records management</div>
+  </div>
+</div>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
