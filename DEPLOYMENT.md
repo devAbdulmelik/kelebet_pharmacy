@@ -8,6 +8,16 @@ This project is now prepared for deployment on Render as:
 
 The repo includes a Render blueprint file at [render.yaml](./render.yaml).
 
+## Free-tier note
+
+Render's Blueprint spec defaults new services to paid instance types if `plan` is omitted. This repo now explicitly sets `plan: free` for:
+
+- the Django web service
+- the static frontend
+- the Postgres database
+
+If Render still shows a paid option during setup, double-check that it is reading the latest version of `render.yaml` from GitHub.
+
 ## 1. Push the project to GitHub
 
 Render works best when connected to a GitHub repo.

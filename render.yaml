@@ -2,6 +2,7 @@ services:
   - type: web
     name: kelebet-pharmacy-api
     runtime: python
+    plan: free
     rootDir: .
     buildCommand: ./build.sh
     startCommand: gunicorn kelebet_pharmacy.wsgi:application
@@ -26,6 +27,7 @@ services:
   - type: web
     name: kelebet-pharmacy-web
     runtime: static
+    plan: free
     rootDir: frontend
     buildCommand: npm install && npm run build
     staticPublishPath: ./dist
@@ -39,5 +41,6 @@ services:
 
 databases:
   - name: kelebet-pharmacy-db
+    plan: free
     databaseName: kelebet_pharmacy
     user: kelebet_pharmacy_user
