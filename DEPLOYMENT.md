@@ -115,6 +115,9 @@ Backend:
 - `CORS_ALLOWED_ORIGINS`
 - `CSRF_TRUSTED_ORIGINS`
 - `DATABASE_URL`
+- `DJANGO_SUPERUSER_USERNAME`
+- `DJANGO_SUPERUSER_EMAIL`
+- `DJANGO_SUPERUSER_PASSWORD`
 
 Frontend:
 
@@ -122,13 +125,21 @@ Frontend:
 
 ## 7. After deployment
 
-Run these once if needed:
+For Render free instances, shell access is not available. This project supports automatic admin creation during deploy with these backend environment variables:
 
 ```bash
-python manage.py createsuperuser
+DJANGO_SUPERUSER_USERNAME=admin
+DJANGO_SUPERUSER_EMAIL=you@example.com
+DJANGO_SUPERUSER_PASSWORD=your-strong-password
 ```
 
-You can do that from the Render shell for the backend service.
+During deployment, `build.sh` runs:
+
+```bash
+python manage.py create_render_superuser
+```
+
+If the admin already exists, it is skipped safely.
 
 ## 8. What this repo already supports
 
