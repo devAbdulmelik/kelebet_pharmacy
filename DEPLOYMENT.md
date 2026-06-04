@@ -13,8 +13,9 @@ The repo includes a Render blueprint file at [render.yaml](./render.yaml).
 Render's Blueprint spec defaults new services to paid instance types if `plan` is omitted. This repo now explicitly sets `plan: free` for:
 
 - the Django web service
-- the static frontend
 - the Postgres database
+
+The static frontend is deployed as a Render static site (`runtime: static`) and uses Render's normal free static-site behavior without a `plan` field.
 
 If Render still shows a paid option during setup, double-check that it is reading the latest version of `render.yaml` from GitHub.
 
