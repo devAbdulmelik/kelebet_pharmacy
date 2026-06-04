@@ -29,6 +29,8 @@ services:
         value: ""
       - key: DJANGO_SUPERUSER_PASSWORD
         value: admin123
+      - key: SEED_DEMO_DATA
+        value: "false"
 
   - type: web
     name: kelebet-pharmacy-web

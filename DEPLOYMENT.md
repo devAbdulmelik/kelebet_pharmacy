@@ -117,6 +117,7 @@ Backend:
 - `DATABASE_URL`
 - `DJANGO_SUPERUSER_USERNAME`
 - `DJANGO_SUPERUSER_PASSWORD`
+- `SEED_DEMO_DATA`
 
 Frontend:
 
@@ -139,7 +140,36 @@ python manage.py create_render_superuser
 
 If the admin already exists, the command updates its password and keeps it as a superadmin account.
 
-## 8. What this repo already supports
+## 8. Optional demo data on Render
+
+If you want Render to seed class-demo data during deployment, set:
+
+```bash
+SEED_DEMO_DATA=true
+```
+
+That will run:
+
+```bash
+python manage.py seed_demo_data
+```
+
+It creates:
+
+- 30 medicines
+- 20 sales
+- 5 customers
+- 5 suppliers
+
+Recommended use:
+
+1. set `SEED_DEMO_DATA=true`
+2. redeploy the backend once
+3. after data is created, set it back to `false`
+
+This keeps later deploys from re-running demo setup unnecessarily.
+
+## 9. What this repo already supports
 
 - Django production env settings
 - `DATABASE_URL` parsing for Postgres
