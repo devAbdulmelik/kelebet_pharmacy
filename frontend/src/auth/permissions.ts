@@ -23,7 +23,7 @@ export const NAV_PERMISSIONS = {
 export const REPORT_TAB_PERMISSIONS = {
   'low-stock': ['admin', 'pharmacist'],
   'near-expiry': ['admin', 'pharmacist'],
-  'daily-sales': ['admin', 'pharmacist', 'cashier'],
+  'daily-sales': ['admin', 'cashier'],
 } as const satisfies Record<string, Role[]>;
 
 export type ReportTabId = keyof typeof REPORT_TAB_PERMISSIONS;
