@@ -13,6 +13,7 @@ django-filter = "*"
 gunicorn = "*"
 dj-database-url = "*"
 psycopg = {extras = ["binary"], version = "*"}
+whitenoise = "*"
 
 [dev-packages]
 

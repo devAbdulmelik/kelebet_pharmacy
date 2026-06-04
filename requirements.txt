@@ -7,3 +7,4 @@ mysqlclient
 gunicorn
 dj-database-url
 psycopg[binary]
+whitenoise
