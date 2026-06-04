@@ -146,7 +146,7 @@ class Command(BaseCommand):
             purchase_price = Decimal(random.randint(20, 220))
             selling_price = purchase_price + Decimal(random.randint(5, 40))
             medicine, _ = Medicine.objects.get_or_create(
-                batch_number=f'DEMO-{index:03d}',
+                batch_number=f'BATCH-2026-{index:03d}',
                 defaults={
                     'name': name,
                     'generic_name': generic_name,
