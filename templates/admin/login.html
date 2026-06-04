@@ -1,0 +1,17 @@
+{% extends "admin/login.html" %}
+{% load i18n static %}
+
+{% block content %}
+<div class="kp-login-shell">
+  <div class="kp-login-panel">
+    <div class="kp-login-header">
+      <img src="{% static 'admin/logo.png' %}" alt="Kelebet Pharmacy" class="kp-login-logo">
+      <div>
+        <h1>Kelebet Pharmacy</h1>
+        <p>Administration Console</p>
+      </div>
+    </div>
+    {{ block.super }}
+  </div>
+</div>
+{% endblock %}

@@ -1,4 +1,4 @@
-{% extends "admin/base_site.html" %}
+{% extends "admin/base.html" %}
 {% load static %}
 
 {% block extrastyle %}
@@ -13,7 +13,7 @@
 <div class="kp-branding">
   <img src="{% static 'admin/logo.png' %}" alt="Kelebet Pharmacy" class="kp-branding__logo">
   <div class="kp-branding__copy">
-    <h1 id="site-name">Kelebet Pharmacy Admin</h1>
+    <h1 id="site-name"><a href="{% url 'admin:index' %}">Kelebet Pharmacy Admin</a></h1>
     <div class="kp-branding__subtitle">Operations and records management</div>
   </div>
 </div>

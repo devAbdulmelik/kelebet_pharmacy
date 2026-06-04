@@ -24,6 +24,10 @@ html, body {
   float: none;
 }
 
+#branding h1, #branding h1 a:link, #branding h1 a:visited {
+  color: white;
+}
+
 .kp-branding {
   display: flex;
   align-items: center;
@@ -158,4 +162,69 @@ input:focus, textarea:focus, select:focus {
     width: 44px;
     height: 44px;
   }
+}
+
+.login {
+  background:
+    radial-gradient(circle at top left, rgba(45, 158, 88, 0.14), transparent 28%),
+    linear-gradient(180deg, #f7fbf8 0%, #eef4f1 100%);
+}
+
+.login #container {
+  background: transparent;
+  min-width: auto;
+}
+
+.kp-login-shell {
+  display: flex;
+  justify-content: center;
+  padding: 32px 0 12px;
+}
+
+.kp-login-panel {
+  width: 100%;
+  max-width: 460px;
+  background: rgba(255,255,255,0.96);
+  border: 1px solid var(--kp-border);
+  border-radius: 24px;
+  box-shadow: 0 24px 48px rgba(15, 23, 42, 0.08);
+  overflow: hidden;
+}
+
+.kp-login-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 24px 20px;
+  background: linear-gradient(135deg, #0f4a26, #1a6b3a);
+  color: white;
+}
+
+.kp-login-header h1 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.kp-login-header p {
+  margin: 4px 0 0;
+  color: rgba(255,255,255,0.8);
+}
+
+.kp-login-logo {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+  background: white;
+  border-radius: 18px;
+  padding: 6px;
+}
+
+.login #content {
+  padding: 24px;
+}
+
+.login .form-row {
+  padding: 0;
+  margin-bottom: 16px;
 }
