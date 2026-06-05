@@ -14,6 +14,12 @@ interface CartItem extends Medicine {
   cartQuantity: number;
 }
 
+interface Customer {
+  id: number;
+  name: string;
+  phone?: string;
+}
+
 interface ReceiptData {
   id?: number;
   invoiceNumber?: string;
@@ -23,12 +29,16 @@ interface ReceiptData {
   paymentMethod: string;
   cashReceived?: number;
   tax?: number;
+  customerId?: number | null;
+  customerName?: string;
 }
 
 export default function POS() {
   const [medicines, setMedicines] = useState<Medicine[]>([]);
+  const [customers, setCustomers] = useState<Customer[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [selectedCustomerId, setSelectedCustomerId] = useState<number | ''>('');
   const [paymentMethod, setPaymentMethod] = useState<'cash' | 'card' | 'mobile_money'>('cash');
   const [cashReceived, setCashReceived] = useState<number>(0);
   const [loading, setLoading] = useState(false);
@@ -61,8 +71,19 @@ export default function POS() {
     }
   };
 
+  const fetchCustomers = async () => {
+    try {
+      const { data } = await api.get('/customers/');
+      setCustomers(Array.isArray(data) ? data : []);
+    } catch (err) {
+      console.error('Error fetching customers:', err);
+      setCustomers([]);
+    }
+  };
+
   useEffect(() => {
     fetchMedicines();
+    fetchCustomers();
   }, []);
 
   const filteredMedicines = medicines.filter(m =>
@@ -102,6 +123,7 @@ export default function POS() {
   const taxAmount = totalAmount * 0.15; // 15% tax
   const finalTotal = totalAmount + taxAmount;
   const change = cashReceived - finalTotal;
+  const selectedCustomer = customers.find((customer) => customer.id === selectedCustomerId) || null;
 
   const receiptData: ReceiptData | null = cart.length > 0 || receipt
     ? {
@@ -118,6 +140,8 @@ export default function POS() {
         tax: receipt?.tax || taxAmount,
         paymentMethod: receipt?.paymentMethod || paymentMethod.replace('_', ' ').toUpperCase(),
         cashReceived: receipt?.cashReceived || (paymentMethod === 'cash' ? cashReceived : 0),
+        customerId: receipt?.customerId ?? (selectedCustomer?.id || null),
+        customerName: receipt?.customerName || selectedCustomer?.name || '',
       }
     : null;
 
@@ -189,7 +213,7 @@ export default function POS() {
 
       const response = await api.post('/sales/create/', {
         payment_method: paymentMethod,
-        customer: null,
+        customer: selectedCustomerId || null,
         items: items
       });
 
@@ -209,10 +233,13 @@ export default function POS() {
         tax: taxAmount,
         paymentMethod: paymentMethod.replace('_', ' ').toUpperCase(),
         cashReceived: paymentMethod === 'cash' ? cashReceived : 0,
+        customerId: response.data?.customer ?? (selectedCustomerId || null),
+        customerName: response.data?.customer_name || selectedCustomer?.name || '',
       });
       setCart([]);
       setSearchTerm('');
       setCashReceived(0);
+      setSelectedCustomerId('');
 
       // Refresh medicine stock
       fetchMedicines();
@@ -447,6 +474,23 @@ export default function POS() {
             </div>
 
             <div className="mb-4">
+              <label className="form-label fw-bold" style={{ color: '#1a1a2e', fontSize: 13, marginBottom: 10 }}>Customer</label>
+              <select
+                className="form-select"
+                value={selectedCustomerId}
+                onChange={(e) => setSelectedCustomerId(e.target.value ? Number(e.target.value) : '')}
+                style={{ borderRadius: 10 }}
+              >
+                <option value="">Walk-in customer</option>
+                {customers.map((customer) => (
+                  <option key={customer.id} value={customer.id}>
+                    {customer.name}{customer.phone ? ` - ${customer.phone}` : ''}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="mb-4">
               <label className="form-label fw-bold" style={{ color: '#1a1a2e', fontSize: 13, marginBottom: 10 }}>Payment Method</label>
               <div className="d-flex gap-2">
                 {['cash', 'card', 'mobile_money'].map(method => (
@@ -620,7 +664,7 @@ export default function POS() {
                   </div>
                   <div>
                     <span>PAID TO: </span>
-                    <span style={{ fontWeight: 400 }}>[CUSTOMER NAME]</span>
+                    <span style={{ fontWeight: 400 }}>{receipt.customerName || 'WALK-IN CUSTOMER'}</span>
                   </div>
                 </div>
 

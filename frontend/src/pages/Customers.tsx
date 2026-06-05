@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import api from '../api/axios';
-import { Search, Plus, Edit2, Trash2, User } from 'lucide-react';
+import { Search, Plus, Edit2, Trash2, History, X } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { hasRoleAccess, NAV_PERMISSIONS } from '../auth/permissions';
 
@@ -11,6 +11,25 @@ interface Customer {
   email?: string;
   address?: string;
   created_at?: string;
+  purchase_history?: Sale[];
+}
+
+interface SaleItem {
+  id: number;
+  medicine_name: string;
+  quantity: number;
+  unit_price: string | number;
+  subtotal: string | number;
+}
+
+interface Sale {
+  id: number;
+  invoice_number: string;
+  customer_name?: string;
+  payment_method: string;
+  total_amount: string | number;
+  sale_date: string;
+  items: SaleItem[];
 }
 
 export default function Customers() {
@@ -20,6 +39,7 @@ export default function Customers() {
   const [search, setSearch] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [editingCustomer, setEditingCustomer] = useState<Customer | null>(null);
+  const [historyCustomer, setHistoryCustomer] = useState<Customer | null>(null);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -60,6 +80,10 @@ export default function Customers() {
       address: customer.address || '',
     });
     setShowModal(true);
+  };
+
+  const openHistoryModal = (customer: Customer) => {
+    setHistoryCustomer(customer);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -130,7 +154,7 @@ export default function Customers() {
                 <th>Phone</th>
                 <th>Email</th>
                 <th>Address</th>
-                <th>Actions</th>
+                <th style={{ width: 220 }}>Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -141,6 +165,9 @@ export default function Customers() {
                   <td>{customer.email || '-'}</td>
                   <td className="text-muted small">{customer.address || '-'}</td>
                   <td>
+                    <button className="btn btn-sm btn-outline-secondary me-2" onClick={() => openHistoryModal(customer)}>
+                      <History size={16} />
+                    </button>
                     {canManageCustomers && (
                       <>
                         <button className="btn btn-sm btn-outline-primary me-2" onClick={() => openEditModal(customer)}>
@@ -196,6 +223,75 @@ export default function Customers() {
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {historyCustomer && (
+        <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1060 }}>
+          <div className="modal-dialog modal-lg modal-dialog-scrollable">
+            <div className="modal-content" style={{ borderRadius: 16 }}>
+              <div className="modal-header">
+                <div>
+                  <h5 className="mb-1">Purchase History</h5>
+                  <div className="text-muted" style={{ fontSize: 14 }}>{historyCustomer.name}</div>
+                </div>
+                <button type="button" className="btn-close" onClick={() => setHistoryCustomer(null)}></button>
+              </div>
+              <div className="modal-body">
+                {!historyCustomer.purchase_history || historyCustomer.purchase_history.length === 0 ? (
+                  <div className="text-center py-4 text-muted">No sales tied to this customer yet.</div>
+                ) : (
+                  <div className="d-grid gap-3">
+                    {historyCustomer.purchase_history.map((sale) => (
+                      <div key={sale.id} className="border rounded-3 p-3" style={{ borderColor: '#e5e7eb' }}>
+                        <div className="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+                          <div>
+                            <div className="fw-bold" style={{ color: '#1a1a2e' }}>{sale.invoice_number}</div>
+                            <div className="text-muted" style={{ fontSize: 13 }}>
+                              {new Date(sale.sale_date).toLocaleString()}
+                            </div>
+                          </div>
+                          <div className="text-end">
+                            <div className="fw-bold" style={{ color: '#1a6b3a' }}>ETB {Number(sale.total_amount).toFixed(2)}</div>
+                            <div className="text-muted text-uppercase" style={{ fontSize: 12 }}>
+                              {sale.payment_method.replace('_', ' ')}
+                            </div>
+                          </div>
+                        </div>
+                        <div className="table-responsive">
+                          <table className="table table-sm mb-0">
+                            <thead>
+                              <tr>
+                                <th>Medicine</th>
+                                <th>Qty</th>
+                                <th>Unit Price</th>
+                                <th>Subtotal</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {sale.items.map((item) => (
+                                <tr key={item.id}>
+                                  <td>{item.medicine_name}</td>
+                                  <td>{item.quantity}</td>
+                                  <td>ETB {Number(item.unit_price).toFixed(2)}</td>
+                                  <td>ETB {Number(item.subtotal).toFixed(2)}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary d-flex align-items-center gap-2" onClick={() => setHistoryCustomer(null)}>
+                  <X size={16} /> Close
+                </button>
+              </div>
             </div>
           </div>
         </div>

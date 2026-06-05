@@ -60,9 +60,16 @@ class MedicineSerializer(serializers.ModelSerializer):
 
 
 class CustomerSerializer(serializers.ModelSerializer):
+    purchase_history = serializers.SerializerMethodField()
+
     class Meta:
         model = Customer
-        fields = '__all__'
+        fields = ['id', 'name', 'phone', 'email', 'address', 'created_at', 'purchase_history']
+        read_only_fields = ['created_at', 'purchase_history']
+
+    def get_purchase_history(self, obj):
+        sales = obj.sale_set.all().select_related('cashier', 'customer').prefetch_related('items__medicine').order_by('-sale_date')
+        return SaleSerializer(sales, many=True).data
 
 
 class SaleItemSerializer(serializers.ModelSerializer):
@@ -76,11 +83,12 @@ class SaleItemSerializer(serializers.ModelSerializer):
 class SaleSerializer(serializers.ModelSerializer):
     items = SaleItemSerializer(many=True, read_only=True)
     cashier_name = serializers.CharField(source='cashier.username', read_only=True)
+    customer_name = serializers.CharField(source='customer.name', read_only=True)
     total_amount = serializers.DecimalField(max_digits=12, decimal_places=2, read_only=True)
     invoice_number = serializers.CharField(read_only=True)
 
     class Meta:
         model = Sale
-        fields = ['id', 'invoice_number', 'cashier', 'cashier_name', 'customer', 
+        fields = ['id', 'invoice_number', 'cashier', 'cashier_name', 'customer', 'customer_name',
                   'total_amount', 'payment_method', 'sale_date', 'items']
         read_only_fields = ['invoice_number', 'total_amount', 'cashier']

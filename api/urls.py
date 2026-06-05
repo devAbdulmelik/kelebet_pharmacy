@@ -14,6 +14,7 @@ urlpatterns = [
     # Suppliers & Customers
     path('suppliers/', views.SupplierListCreate.as_view(), name='supplier-list'),
     path('customers/', views.CustomerListCreate.as_view(), name='customer-list'),
+    path('customers/<int:pk>/', views.CustomerDetail.as_view(), name='customer-detail'),
     
     # Sales
     path('sales/', views.SaleListCreate.as_view(), name='sale-list'),

@@ -88,6 +88,12 @@ class SupplierListCreate(generics.ListCreateAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
 class CustomerListCreate(generics.ListCreateAPIView):
+    queryset = Customer.objects.all().order_by('name')
+    serializer_class = CustomerSerializer
+    permission_classes = [IsCashierOrHigher]
+
+
+class CustomerDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
     permission_classes = [IsCashierOrHigher]
@@ -95,12 +101,12 @@ class CustomerListCreate(generics.ListCreateAPIView):
 
 # ====================== SALES (POS) ======================
 class SaleListCreate(generics.ListCreateAPIView):
-    queryset = Sale.objects.all()
+    queryset = Sale.objects.all().select_related('cashier', 'customer').prefetch_related('items__medicine')
     serializer_class = SaleSerializer
     permission_classes = [permissions.IsAuthenticated]
 
 class SaleDetail(generics.RetrieveAPIView):
-    queryset = Sale.objects.all()
+    queryset = Sale.objects.all().select_related('cashier', 'customer').prefetch_related('items__medicine')
     serializer_class = SaleSerializer
     permission_classes = [permissions.IsAuthenticated]
 
