@@ -125,7 +125,51 @@ export default function POS() {
     if (!receiptRef.current) return;
     const printWindow = window.open('', '', 'width=600,height=800');
     if (printWindow) {
-      printWindow.document.write(receiptRef.current.innerHTML);
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <title>Kelebet Pharmacy Receipt</title>
+            <style>
+              body {
+                margin: 0;
+                padding: 20px 0;
+                background: #ffffff;
+                font-family: "Arial Narrow", Inter, Arial, sans-serif;
+              }
+              .receipt-template {
+                background: white;
+                padding: 18px 14px;
+                font-family: "Arial Narrow", Inter, Arial, sans-serif;
+                width: 320px;
+                margin: 0 auto;
+                line-height: 1.15;
+                color: #111111;
+              }
+              img {
+                display: block;
+                margin: 0 auto 8px;
+              }
+              @media print {
+                @page {
+                  size: 80mm auto;
+                  margin: 6mm;
+                }
+                body {
+                  padding: 0;
+                }
+                .receipt-template {
+                  width: auto;
+                  box-shadow: none !important;
+                }
+              }
+            </style>
+          </head>
+          <body>
+            ${receiptRef.current.outerHTML}
+          </body>
+        </html>
+      `);
       printWindow.document.close();
       printWindow.focus();
       setTimeout(() => printWindow.print(), 250);
@@ -534,80 +578,82 @@ export default function POS() {
             ) : (
               <div ref={receiptRef} className="receipt-template" style={{
                 background: 'white',
-                padding: '40px',
-                fontFamily: 'Inter, Arial, sans-serif',
-                maxWidth: '500px',
+                padding: '18px 14px',
+                fontFamily: '"Arial Narrow", Inter, Arial, sans-serif',
+                maxWidth: '320px',
                 margin: '0 auto',
-                lineHeight: '1.6',
-                borderRadius: 10,
-                boxShadow: '0 4px 8px rgba(0,0,0,0.08)',
+                lineHeight: '1.15',
+                borderRadius: 0,
+                boxShadow: '0 18px 40px rgba(0,0,0,0.08)',
+                color: '#151515',
               }}>
                 {/* Header */}
-                <div style={{ textAlign: 'center', marginBottom: '20px', borderBottom: '2px dashed #1a6b3a', paddingBottom: '18px' }}>
+                <div style={{ textAlign: 'center', marginBottom: '12px', borderBottom: '1px dashed #444', paddingBottom: '10px' }}>
                   <img
                     src={brandLogo}
                     alt="Kelebet Pharmacy logo"
-                    style={{ width: '76px', height: '76px', objectFit: 'contain', marginBottom: '10px' }}
+                    style={{ width: '92px', height: '92px', objectFit: 'contain', marginBottom: '6px' }}
                   />
-                  <h2 style={{ color: '#0f4a26', margin: '0 0 4px 0', fontSize: '24px', fontWeight: 'bold', letterSpacing: '0.3px' }}>
+                  <h2 style={{ color: '#111', margin: '0 0 2px 0', fontSize: '26px', fontWeight: '800', letterSpacing: '-0.2px' }}>
                     KELEBET PHARMACY
                   </h2>
-                  <p style={{ margin: '4px 0', color: '#1a6b3a', fontSize: '13px', fontWeight: 600 }}>
-                    Pharmacy Receipt
+                  <p style={{ margin: '1px 0', color: '#222', fontSize: '11px', fontWeight: 700 }}>
+                    ADDIS ABABA, ETHIOPIA
                   </p>
-                  <p style={{ margin: '8px 0 0 0', color: '#425466', fontSize: '12px' }}>
-                    Addis Ababa, Ethiopia
+                  <p style={{ margin: '1px 0', color: '#222', fontSize: '11px' }}>
+                    TIN: 1234567890-XYZ
                   </p>
-                  <p style={{ margin: '3px 0', color: '#425466', fontSize: '12px' }}>
-                    +251 91 310 9112
+                  <p style={{ margin: '1px 0', color: '#222', fontSize: '11px' }}>
+                    123456789-992
                   </p>
                 </div>
 
                 {/* Transaction Details */}
-                <div style={{ marginBottom: '20px', borderBottom: '2px dashed #1a6b3a', paddingBottom: '15px', fontSize: '12px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '5px' }}>
-                    <span style={{ fontWeight: 'bold' }}>Transaction No:</span>
-                    <span>{receipt.invoiceNumber}</span>
+                <div style={{ marginBottom: '8px', borderBottom: '1px dashed #444', paddingBottom: '8px', fontSize: '11px', fontWeight: 700 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', gap: '12px', marginBottom: '3px' }}>
+                    <span>DATE: {receipt.date}</span>
+                    <span>RECEIPT #: {receipt.invoiceNumber}</span>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ fontWeight: 'bold' }}>Date:</span>
-                    <span>{receipt.date}</span>
+                  <div style={{ marginBottom: '2px' }}>
+                    <span>RECEIPT #: </span>
+                    <span style={{ fontWeight: 400 }}>{receipt.invoiceNumber}</span>
+                  </div>
+                  <div>
+                    <span>PAID TO: </span>
+                    <span style={{ fontWeight: 400 }}>[CUSTOMER NAME]</span>
                   </div>
                 </div>
 
                 {/* Items Table */}
-                <div style={{ marginBottom: '20px' }}>
+                <div style={{ marginBottom: '10px', borderBottom: '1px dashed #444', paddingBottom: '8px' }}>
                   <div style={{
                     display: 'grid',
-                    gridTemplateColumns: '2fr 1fr 1fr 1fr',
-                    gap: '10px',
-                    marginBottom: '10px',
-                    paddingBottom: '10px',
-                    borderBottom: '2px solid #1a6b3a',
-                    fontSize: '11px',
+                    gridTemplateColumns: '30px 1.65fr 1fr 1fr',
+                    gap: '4px',
+                    marginBottom: '5px',
+                    paddingBottom: '5px',
+                    borderBottom: '1px dashed #444',
+                    fontSize: '10px',
                     fontWeight: 'bold',
-                    color: 'white',
-                    background: '#1a6b3a',
-                    padding: '8px',
+                    color: '#111',
                   }}>
+                    <div>QTY</div>
                     <div>ITEM</div>
-                    <div style={{ textAlign: 'center' }}>QTY</div>
-                    <div style={{ textAlign: 'right' }}>PRICE</div>
-                    <div style={{ textAlign: 'right' }}>SUBTOTAL</div>
+                    <div style={{ textAlign: 'right' }}>UNIT PRICE</div>
+                    <div style={{ textAlign: 'right' }}>AMOUNT</div>
                   </div>
                   {receipt.items.map((item, idx) => (
                     <div key={idx} style={{
                       display: 'grid',
-                      gridTemplateColumns: '2fr 1fr 1fr 1fr',
-                      gap: '10px',
-                      paddingBottom: '8px',
-                      borderBottom: '1px dotted #ccc',
-                      fontSize: '12px',
+                      gridTemplateColumns: '30px 1.65fr 1fr 1fr',
+                      gap: '4px',
+                      paddingBottom: '3px',
+                      fontSize: '11px',
                     }}>
-                      <div>{item.name}</div>
-                      <div style={{ textAlign: 'center' }}>{item.cartQuantity}</div>
+                      <div>{item.cartQuantity}</div>
+                      <div style={{ textTransform: 'uppercase' }}>{item.name}</div>
                       <div style={{ textAlign: 'right' }}>ETB {Number(item.selling_price).toFixed(2)}</div>
-                      <div style={{ textAlign: 'right', fontWeight: 'bold' }}>
+                      <div style={{ textAlign: 'right' }}>
                         ETB {(Number(item.selling_price) * item.cartQuantity).toFixed(2)}
                       </div>
                     </div>
@@ -615,58 +661,52 @@ export default function POS() {
                 </div>
 
                 {/* Totals */}
-                <div style={{ marginBottom: '20px', borderBottom: '2px dashed #1a6b3a', paddingBottom: '15px', fontSize: '12px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                    <span>TOTAL</span>
-                    <span style={{ fontWeight: 'bold' }}>ETB {receipt.total.toFixed(2)}</span>
+                <div style={{ marginBottom: '10px', borderBottom: '1px dashed #444', paddingBottom: '8px', fontSize: '11px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px' }}>
+                    <span></span>
+                    <span><strong>SUBTOTAL:</strong> ETB {receipt.total.toFixed(2)}</span>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                    <span>SALES TAX (15%)</span>
-                    <span style={{ fontWeight: 'bold' }}>ETB {(receipt.tax || 0).toFixed(2)}</span>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px' }}>
+                    <span></span>
+                    <span><strong>VAT (15%):</strong> ETB {(receipt.tax || 0).toFixed(2)}</span>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', color: '#0f4a26' }}>
-                    <span style={{ fontWeight: 'bold' }}>GRAND TOTAL</span>
-                    <span style={{ fontWeight: 'bold' }}>ETB {(receipt.total + (receipt.tax || 0)).toFixed(2)}</span>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px' }}>
+                    <span></span>
+                    <span style={{ fontSize: '12px' }}><strong>TOTAL:</strong> ETB {(receipt.total + (receipt.tax || 0)).toFixed(2)}</span>
                   </div>
                   {receipt.cashReceived ? (
-                    <>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-                        <span>CASH</span>
-                        <span style={{ fontWeight: 'bold' }}>ETB {receipt.cashReceived.toFixed(2)}</span>
-                      </div>
-                    </>
+                    <div style={{ height: 0 }} />
                   ) : null}
                 </div>
 
-                {/* Change */}
-                {receipt.cashReceived ? (
-                  <div style={{
-                    background: '#1a6b3a',
-                    color: 'white',
-                    padding: '12px',
-                    textAlign: 'center',
-                    marginBottom: '20px',
-                    fontWeight: 'bold',
-                    fontSize: '14px',
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    borderRadius: 8,
-                  }}>
-                    <span>CHANGE</span>
-                    <span>ETB {(receipt.cashReceived - (receipt.total + (receipt.tax || 0))).toFixed(2)}</span>
+                <div style={{ marginBottom: '10px', borderBottom: '1px dashed #444', paddingBottom: '8px', fontSize: '11px', fontWeight: 700 }}>
+                  {receipt.cashReceived ? (
+                    <>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px' }}>
+                        <span>CASH:</span>
+                        <span>ETB {receipt.cashReceived.toFixed(2)}</span>
+                      </div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2px' }}>
+                        <span>CHANGE:</span>
+                        <span>ETB {(receipt.cashReceived - (receipt.total + (receipt.tax || 0))).toFixed(2)}</span>
+                      </div>
+                    </>
+                  ) : null}
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span>PAYMENT TYPE:</span>
+                    <span>{receipt.paymentMethod}</span>
                   </div>
-                ) : null}
+                </div>
 
                 {/* Footer */}
-                <div style={{ textAlign: 'center', marginTop: '20px', borderTop: '1px dashed #1a6b3a', paddingTop: '15px', fontSize: '12px' }}>
-                  <p style={{ color: '#1a6b3a', fontStyle: 'italic', margin: '5px 0', fontWeight: 'bold' }}>
-                    Thank you for choosing Kelebet Pharmacy
+                <div style={{ textAlign: 'center', marginTop: '8px', fontSize: '10px', lineHeight: '1.3' }}>
+                  <p style={{ margin: '0 0 8px', borderTop: '1px dashed #444', paddingTop: '8px', fontWeight: 700 }}>
+                    KINDLY NOTE: Medicines cannot be returned or exchanged.
+                    <br />
+                    Please consult a doctor for prescription.
                   </p>
-                  <p style={{ color: '#666', margin: '3px 0', fontSize: '11px' }}>
-                    Please keep this receipt for your records.
-                  </p>
-                  <p style={{ color: '#1a6b3a', margin: '8px 0', fontSize: '11px', fontWeight: 600 }}>
-                    Quality medicines. Trusted care.
+                  <p style={{ margin: 0, fontSize: '11px', fontWeight: 800 }}>
+                    THANK YOU FOR CHOOSING KELEBET PHARMACY!
                   </p>
                 </div>
               </div>
