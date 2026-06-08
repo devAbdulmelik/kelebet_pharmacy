@@ -11,7 +11,7 @@
 
 | No. | Name | ID Number |
 |---|---|---|
-| 1 | Abulmalik Mohammed | ATE/8678/2016 |
+| 1 | Abdulmalik Mohammed | ATE/8678/2016 |
 | 2 | Edlawit Dibaba | ATE/0375/2016 |
 | 3 | Elias Esubalw | ATE/7216/2016 |
 | 4 | Ephraim Zewdie | ATE/6742/2016 |
