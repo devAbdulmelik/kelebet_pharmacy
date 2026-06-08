@@ -98,24 +98,24 @@ export default function Customers() {
       fetchCustomers();
       alert(editingCustomer ? 'Customer updated!' : 'Customer added successfully!');
     } catch (err) {
-      alert("Failed to save customer");
+      alert('Failed to save customer');
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (!window.confirm("Delete this customer?")) return;
+    if (!window.confirm('Delete this customer?')) return;
     try {
       await api.delete(`/customers/${id}/`);
       fetchCustomers();
     } catch (err) {
-      alert("Failed to delete customer");
+      alert('Failed to delete customer');
     }
   };
 
-  const filteredCustomers = customers.filter(c =>
-    c.name.toLowerCase().includes(search.toLowerCase()) ||
-    (c.phone || '').includes(search) ||
-    (c.email || '').toLowerCase().includes(search.toLowerCase())
+  const filteredCustomers = customers.filter((customer) =>
+    customer.name.toLowerCase().includes(search.toLowerCase()) ||
+    (customer.phone || '').includes(search) ||
+    (customer.email || '').toLowerCase().includes(search.toLowerCase())
   );
 
   return (
@@ -181,12 +181,18 @@ export default function Customers() {
                   </td>
                 </tr>
               ))}
+              {!loading && filteredCustomers.length === 0 && (
+                <tr>
+                  <td colSpan={5} className="text-center text-muted py-4">
+                    No customers found.
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>
       </div>
 
-      {/* Add/Edit Modal */}
       {showModal && (
         <div className="modal show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)', zIndex: 1050 }}>
           <div className="modal-dialog">
