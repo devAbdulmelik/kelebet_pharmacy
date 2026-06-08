@@ -59,7 +59,8 @@ The application is designed around three user roles:
 
 ### Backend
 
-- Django
+- Django- Username: `admin`
+- Password: `admin123`
 - Django REST Framework
 - Token Authentication
 - PostgreSQL on production / SQLite for local development
@@ -188,6 +189,10 @@ Default configured credentials:
 
 - Username: `admin`
 - Password: `admin123`
+- Username: `yasmin`
+- Password: `12345678`
+-  Username: `Ahmed`
+- Password: `12345678`
 
 This should be changed if the project will remain publicly accessible.
 
